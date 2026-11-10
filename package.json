@@ -1,0 +1,22 @@
+{
+    "name": "exercicio-testes",
+    "version": "1.0.0",
+    "description": "Exercício de análise de testes unitários",
+    "main": "src/operacoes.js",
+    "scripts": {
+        "test": "jest",
+        "test:watch": "jest --watchAll"
+    },
+    "overrides": {
+        "braces": "^3.0.3",
+        "cross-spawn": "^6.0.6",
+        "decode-uri-component": "^0.5.1",
+        "glob": "^14.0.2",
+        "minimatch": "^11.0.1",
+        "got": "^11.8.5"
+    },
+    "devDependencies": {
+        "jest": "^30.5.2",
+        "nodemon": "^3.1.14"
+    }
+}
