@@ -166,12 +166,38 @@ O resultado esperado é `false`. A função só retorna `true` se passar pelas t
 ## a
 > Implemente os 6 casos de testes unitários da tabela acima utilizando Jest. Use `toBe()` para os resultados numéricos e `toThrow()` para as exceções.
 
-<tests>
+```js
+describe("calcularFrete", () => {
+    test("caso 1: compra de 250 tem frete grátis", () => {
+        expect(calcularFrete(250, 10)).toBe(0);
+    });
+
+    test("caso 2: compra de 100 e distância 10 custa 20", () => {
+        expect(calcularFrete(100, 10)).toBe(20);
+    });
+
+    test("caso 3: compra de exatamente 200 tem frete grátis", () => {
+        expect(calcularFrete(200, 5)).toBe(0);
+    });
+
+    test("caso 4: compra de 0 e distância 10 custa 20", () => {
+        expect(calcularFrete(0, 10)).toBe(20);
+    });
+
+    test("caso 5: valor da compra negativo lança erro", () => {
+        expect(() => calcularFrete(-50, 10)).toThrow("Valores inválidos");
+    });
+
+    test("caso 6: distância negativa lança erro", () => {
+        expect(() => calcularFrete(100, -5)).toThrow("Valores inválidos");
+    });
+});
+```
 
 ## b
 > Explique por que o caso 3 deve retornar zero se o valor da compra for maior ou igual a R$ 200,00.
 
-<Insira a resposta aqui>
+A condição da função é `valorCompra >= 200`, ou seja, o frete é grátis a partir de R$ 200,00, **inclusive** o próprio 200. No caso 3 a compra vale exatamente 200, então a condição é verdadeira, a função retorna 0 e nem chega a calcular `distancia * 2` (que daria 10). Esse caso testa o valor de fronteira, que é onde costuma aparecer o erro de usar `>` no lugar de `>=`.
 
 ---
 
@@ -191,12 +217,38 @@ O resultado esperado é `false`. A função só retorna `true` se passar pelas t
 ## a
 > Escreva os 6 testes unitários da tabela acima utilizando Jest. Use `toBe()` para os resultados numéricos e `toThrow()` para as exceções.
 
-<tests>
+```js
+describe("converterCelsiusParaFahrenheit", () => {
+    test("caso 1: 0 °C = 32 °F", () => {
+        expect(converterCelsiusParaFahrenheit(0)).toBe(32);
+    });
+
+    test("caso 2: 100 °C = 212 °F", () => {
+        expect(converterCelsiusParaFahrenheit(100)).toBe(212);
+    });
+
+    test("caso 3: -40 °C = -40 °F", () => {
+        expect(converterCelsiusParaFahrenheit(-40)).toBe(-40);
+    });
+
+    test("caso 4: 25 °C = 77 °F", () => {
+        expect(converterCelsiusParaFahrenheit(25)).toBe(77);
+    });
+
+    test("caso 5: string numérica '25' lança erro", () => {
+        expect(() => converterCelsiusParaFahrenheit("25")).toThrow("A temperatura deve ser numérica");
+    });
+
+    test("caso 6: string não numérica 'abc' lança erro", () => {
+        expect(() => converterCelsiusParaFahrenheit("abc")).toThrow("A temperatura deve ser numérica");
+    });
+});
+```
 
 ## b
 > Explique por que a entrada "25" deve provocar um erro, mesmo representando numericamente o valor 25.
 
-<Insira a resposta aqui>
+A entrada `"25"` deve provocar erro porque a função valida o **tipo** do dado com `typeof celsius !== "number"`, e `"25"` é uma string, não um número, mesmo que o conteúdo pareça numérico. A função exige que a temperatura seja do tipo número. Aceitar strings dependeria de uma conversão automática do JavaScript (coerção), que pode esconder erros de quem chama a função (como um valor de formulário que chega como texto e não foi convertido) e levar a resultados incorretos, como `NaN` para entradas do tipo `"abc"`. O teste garante que essa regra de validação seja respeitada.
 
 ---
 
@@ -229,20 +281,20 @@ test("deve calcular o total com preço negativo", () => {
 ## a
 > O que são testes unitários e por que são importantes no desenvolvimento de sistemas?
 
-<Insira a resposta aqui>
+Testes unitários são testes automatizados que verificam a menor parte testável de um sistema (normalmente uma função ou método) de forma isolada, comparando o resultado obtido com o resultado esperado. São importantes porque detectam erros cedo, quando corrigir é mais barato; protegem contra regressões quando o código é alterado (se algo quebrar, o teste avisa); documentam o comportamento esperado da função; e dão segurança para refatorar e para entregar código com qualidade, já que podem rodar automaticamente a cada alteração.
 
 ## b
 > Para cada teste, informe se ele PASSA ou FALHA. Justifique individualmente.
 
-Teste A - 
-Teste B - 
-Teste C - 
-Teste D - 
+Teste A - **PASSA**. A função calcula 3 × 10 = 30 e o teste espera 30.
+Teste B - **PASSA**. 0 não é negativo, então não cai no erro, e 0 × 10 = 0, que é o esperado.
+Teste C - **PASSA**. A quantidade -2 é negativa, então a função lança "Valores inválidos", exatamente o que o teste espera com `toThrow`.
+Teste D - **FALHA**. O preço -5 é negativo, então a função lança erro em vez de retornar -10. Como o teste não captura o erro, ele quebra.
 
 ## c
 > Identifique qual(is) teste(s) apresenta(m) uma expectativa incompatível com o comportamento da função. Justifique.
 
-<Insira a resposta aqui>
+O **Teste D** tem uma expectativa incompatível com o comportamento da função. Ele espera que `calcularTotal(2, -5)` retorne -10, mas a função proíbe preço negativo (`precoUnitario < 0`) e lança o erro "Valores inválidos" em vez de retornar um valor. O problema está no teste, não na função. O teste correto seria: `expect(() => calcularTotal(2, -5)).toThrow("Valores inválidos");`
 
 ---
 
@@ -275,20 +327,20 @@ test("deve aceitar senha com 12 caracteres", () => {
 ## a
 > Identifique quais testes passam e quais falham. Justifique cada resposta considerando a condição implementada na função.
 
-Teste A - 
-Teste B - 
-Teste C - 
-Teste D - 
+Teste A - **PASSA**. "abc12345" tem 8 caracteres. A condição `senha.length < 8` é falsa (8 não é menor que 8), então a função retorna `true`, como o teste espera.
+Teste B - **PASSA**. "abc123" tem 6 caracteres. 6 < 8 é verdadeiro, então a função retorna `false`, como o teste espera.
+Teste C - **FALHA**. "abc1234567" tem 10 caracteres. 10 < 8 é falso, então a função retorna `true`, mas o teste espera `false`.
+Teste D - **PASSA**. "abc123456789" tem 12 caracteres. 12 < 8 é falso, então a função retorna `true`, como o teste espera.
 
 ## b
 > Explique qual é o problema que apresenta o teste C.
 
-<Insira a resposta aqui>
+O problema do Teste C está na própria **expectativa do teste**. Uma senha de 10 caracteres atende ao requisito de tamanho mínimo (8 ou mais), então a função corretamente a aceita (`true`). O teste afirma que ela deveria ser rejeitada (`false`), o que contradiz a regra implementada. O erro está no teste, não na função. O nome do teste também está errado: não faz sentido rejeitar uma senha só por ter 10 caracteres.
 
 ## d
 > A função verifica se a senha possui letras maiúsculas, números ou caracteres especiais? Justifique. (O PDF pula a letra "c".)
 
-<Insira a resposta aqui>
+**Não.** A função só verifica o comprimento da senha (`senha.length < 8`). Ela não checa se há letras maiúsculas, números ou caracteres especiais. Por isso uma senha como "aaaaaaaa" (8 letras minúsculas iguais) seria considerada válida.
 
 ---
 
@@ -326,21 +378,21 @@ test("deve lançar erro para quantidade negativa", () => {
 ## a
 > Identifique quais testes passam e quais falham. Justifique cada resposta.
 
-Teste A - 
-Teste B - 
-Teste C - 
-Teste D - 
-Teste E - 
+Teste A - **PASSA**. Quantidade 5 e estoque 20: 5 não é menor ou igual a 0 e 5 > 20 é falso, então retorna "Pedido aprovado".
+Teste B - **PASSA**. Quantidade 10 e estoque 5: 10 > 5 é verdadeiro, então retorna "Estoque insuficiente".
+Teste C - **PASSA**. Quantidade 10 e estoque 10: 10 > 10 é falso, então retorna "Pedido aprovado".
+Teste D - **FALHA**. Quantidade 0 cai em `quantidadeSolicitada <= 0`, então a função lança o erro "Quantidade inválida" em vez de retornar "Estoque insuficiente".
+Teste E - **PASSA**. Quantidade -2 é menor ou igual a 0, então a função lança "Quantidade inválida", exatamente o que o teste espera com `toThrow`.
 
 ## b
 > Explique por que o teste C deve passar mesmo quando a quantidade solicitada é igual ao estoque disponível.
 
-<Insira a resposta aqui>
+Porque a função só considera o estoque insuficiente quando a quantidade solicitada é **estritamente maior** que o estoque (`quantidadeSolicitada > estoque`). Se o cliente pede 10 e existem 10 unidades, o estoque atende o pedido por completo, então o resultado correto é "Pedido aprovado". O teste C verifica justamente esse valor de fronteira e garante que o código usa `>` e não `>=`.
 
 ## c
 > Explique qual é o problema presente no teste D.
 
-<Insira a resposta aqui>
+O Teste D espera que a quantidade 0 retorne "Estoque insuficiente", mas a função trata 0 como quantidade **inválida** (`quantidadeSolicitada <= 0`) e lança o erro "Quantidade inválida". Pedir zero unidades não é falta de estoque, é um dado inválido. O teste está com a expectativa errada. O correto seria: `expect(() => verificarEstoque(10, 0)).toThrow("Quantidade inválida");`
 
 ---
 
@@ -373,13 +425,29 @@ test("Teste 5", () => {
 ## a
 > Analise os cinco testes e indique quais passam e quais falham, justificando cada um individualmente.
 
-Teste 1 - 
-Teste 2 - 
-Teste 3 - 
-Teste 4 - 
-Teste 5 - 
+Teste 1 - **PASSA**. As notas 8 e 6 são válidas e (8 + 6) / 2 = 7, que é o valor esperado.
+Teste 2 - **PASSA**. A nota 10 é válida (a função só rejeita notas maiores que 10) e (10 + 10) / 2 = 10, que é o valor esperado.
+Teste 3 - **PASSA**. A nota 0 é válida (a função só rejeita notas menores que 0) e (0 + 8) / 2 = 4, que é o valor esperado.
+Teste 4 - **FALHA**. A nota -1 é menor que 0, então a função lança "Notas inválidas" em vez de retornar 3.5. O teste deveria usar `toThrow`.
+Teste 5 - **FALHA**. A nota 15 é maior que 10, então a função lança "Notas inválidas" em vez de retornar 10. O teste deveria usar `toThrow`.
+
+Os testes 4 e 5 esperam um valor numérico de entradas que a função rejeita com erro. A correção é: `expect(() => calcularMedia(-1, 8)).toThrow("Notas inválidas");` e `expect(() => calcularMedia(5, 15)).toThrow("Notas inválidas");`.
 
 ## b
 > Crie mais três testes unitários que complementam os testes apresentados.
 
-<tests>
+```js
+describe("calcularMedia", () => {
+    test("calcula média com resultado decimal", () => {
+        expect(calcularMedia(7, 8)).toBe(7.5);
+    });
+
+    test("lança erro quando a nota 1 é negativa", () => {
+        expect(() => calcularMedia(-1, 8)).toThrow("Notas inválidas");
+    });
+
+    test("lança erro quando a nota 2 é maior que 10", () => {
+        expect(() => calcularMedia(5, 15)).toThrow("Notas inválidas");
+    });
+});
+```
